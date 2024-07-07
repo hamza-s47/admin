@@ -7,10 +7,6 @@ conn = MongoClient("mongodb+srv://hamza:1234@mycluster.438n2qs.mongodb.net/?retr
 
 @app.get("/")
 def home():
-    docs=conn.netflix.watchlist.insert_many([
-        {"movie":"POTSV", "watched":True,},
-        {"movie":"Enigma", "watched":False,},
-        {"movie":"No escape", "watched":False}
-        ])
+    docs=conn.netflix.watchlist.insert_one({"movie":"Pirates", "watched":False})
     print(docs)
     return "Hello World!"
