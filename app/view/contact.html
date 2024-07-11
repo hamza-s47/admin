@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About</title>
+    <!-- Tailwind CSS scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: "#e17055",
+                        sec: "#f19066",
+                        myWhite: "#EEEADE",
+                        myBlack: "#34495e",
+                        myGray: "#bdc3c7",
+                        myGrayDark: "#636e72"
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Tailwind CSS scripts End -->
+</head>
+
+<body class="bg-myWhite">
+    <section class="text-gray-600 body-font overflow-hidden">
+        <div class="container px-5 py-24 mx-auto">
+            {% for item in form %}
+            <div class="-my-8 divide-y-2 divide-gray-100">
+                <div class="py-8 flex flex-wrap md:flex-nowrap">
+                    <div class="md:w-64 md:mb-0 mb-6 flex-shrink-0 flex flex-col">
+                        <span class="font-semibold title-font text-gray-700">{{item.time.date()}}</span>
+                        <span class="mt-1 text-gray-500 text-sm">{{item.contact}}</span>
+                    </div>
+                    
+                    <div class="md:flex-grow">
+                        <h2 class="text-2xl font-medium text-gray-900 title-font mb-2">{{item.email}}</h2>
+                        <p class="leading-relaxed">{{item.message}}</p>
+                        <h2 class="text-primary font-bold text-xl inline-flex items-center mt-4">{{item.name}}</h2>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </section>
+</body>
+
+</html>
