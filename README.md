@@ -18,6 +18,14 @@ pip freeze > requirements.txt (Write those versions in a seperate .txt file)
 pip install -r requirements.txt (Install all the versions from that .txt file)
 
 ----------------------------------------------------------------------------------
+
+DEPLOY ON VERCEL:
+vercel login (Github)
+vercel .
+directory... (./)  --> Press enter only for root directory
+link to .... (n)
+... etc
+----------------------------------------------------------------------------------
 @app.get("/mov")
 async def show_movies():
     response = conn.netflix.movies.find_one({})
