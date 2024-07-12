@@ -21,8 +21,8 @@ class FormData(BaseModel):
 
 app = FastAPI()
 origins = [
-    "http://localhost:8000/",
-    "https://hamzasiddiqui.netlify.app/"
+    "http://localhost:4200",       
+    "https://hamzasiddiqui.netlify.app"
 ]
 app.add_middleware(
     CORSMiddleware,
@@ -39,6 +39,10 @@ templates = Jinja2Templates(directory="./app/view")  #For HTML file
 
 @app.get("/login", response_class=HTMLResponse)
 def home(request: Request):
+    check = admin_db.find_one()['isLoggedin']
+    if check:
+        RedirectResponse(url='/')
+        
     return templates.TemplateResponse("index.html", {"request": request, "name": "M HAMZA SIDDIQUI"})
 
 @app.put("/login")

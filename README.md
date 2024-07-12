@@ -20,12 +20,15 @@ pip install -r requirements.txt (Install all the versions from that .txt file)
 ----------------------------------------------------------------------------------
 
 DEPLOY ON VERCEL:
+sudo npm i -g vercel
 vercel login (Github)
 vercel .
 directory... (./)  --> Press enter only for root directory
 link to .... (n)
 ... etc
 ----------------------------------------------------------------------------------
+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  (github token)
+
 @app.get("/mov")
 async def show_movies():
     response = conn.netflix.movies.find_one({})
