@@ -6,6 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Hamza</title>
   <link rel="stylesheet" href="../static/style.css">
+  <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
   <!-- Tailwind CSS scripts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -35,7 +36,7 @@
       <form id="loginForm" class="mx-auto max-w-lg rounded-lg bg-primary shadow-lg">
         <div class="flex flex-col gap-4 p-4 md:p-8">
           <div>
-            <label for="email" class="mb-2 inline-block text-sm text-myWhite sm:text-base">Email</label>
+            <label for="email" class="mb-2 inline-block text-sm text-myWhite sm:text-base">Email or User name</label>
             <input placeholder="Type here" type="email" id="email" name="email" required
               class="w-full rounded border bg-myWhite px-3 py-2 text-sm text-myGrayDark outline-none transition duration-100" />
           </div>
@@ -66,7 +67,7 @@
       const password = document.getElementById('password').value;
 
       const response = await fetch('/login', {
-        method: 'PUT',
+        method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },

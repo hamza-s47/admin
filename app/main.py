@@ -4,14 +4,15 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from fastapi.requests import Request
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from datetime import datetime
 from pymongo import MongoClient
 from pydantic import BaseModel
+import secrets
 
 class Admin(BaseModel):
     email:str
     password:str
-    isLoggedin:bool = False
 class FormData(BaseModel):
     name:str
     email:str
@@ -21,7 +22,7 @@ class FormData(BaseModel):
 
 app = FastAPI()
 origins = [
-    "http://localhost:4200",       
+    "http://localhost:8000",       
     "https://hamzasiddiqui.netlify.app"
 ]
 app.add_middleware(
@@ -31,6 +32,7 @@ app.add_middleware(
     allow_methods=["*"],  # Allows methods like (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allows all headers
 )
+app.add_middleware(SessionMiddleware, secret_key=secrets.token_hex(32))
 client = MongoClient("mongodb+srv://hamza:1234@mycluster.438n2qs.mongodb.net/?retryWrites=true&w=majority&appName=myCluster")
 db = client.portfolio.contact
 admin_db = client.portfolio.admin
@@ -39,33 +41,34 @@ templates = Jinja2Templates(directory="./app/view")  #For HTML file
 
 @app.get("/login", response_class=HTMLResponse)
 def home(request: Request):
-    check = admin_db.find_one()['isLoggedin']
-    if check:
+    if request.session.get("isLoggedin"):
         RedirectResponse(url='/')
         
     return templates.TemplateResponse("index.html", {"request": request, "name": "M HAMZA SIDDIQUI"})
 
-@app.put("/login")
-async def update_login(data:Admin):
+@app.post("/login")
+async def update_login(req:Request, data:Admin):
     check = admin_db.find_one()
-    if data.email == check['email'] and data.password == check['password']:
-        admin_db.update_one({"email": data.email}, {"$set": {"isLoggedin": True}})
+    if (data.email == check['email'] or data.email == check['user_name']) and data.password == check['password']:
+        req.session["isLoggedin"] = True
+        print("login POST route: ", req.session.get("isLoggedin"))
         return RedirectResponse(url= '/')
     return RedirectResponse(url='/login')
     
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     data = db.find()
-    check = admin_db.find_one()['isLoggedin']
-    if check:
+    if request.session.get("isLoggedin"):
+        print("it is comming to get root route")
         return templates.TemplateResponse("contact.html", {"request": request, "form": data})
     
+    print("it is comming to get root route but not redirecting: ", request.session.get("isLoggedin"))
     return RedirectResponse(url='/login')
 
 @app.post("/contact")
 async def submit_form(form:FormData):
     form_dict = form.model_dump()
-    form_dict["time"] = datetime.now()
+    # form_dict["time"] = datetime.now()
     db.insert_one(form_dict)
     #print(form)
     return { "message": "Success!" }
