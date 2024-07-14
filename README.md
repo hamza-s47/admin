@@ -1,7 +1,7 @@
 python3.12 -m uvicorn main:app --host 0.0.0.0 --reload
 python3.12 -m uvicorn app.main:app --host 0.0.0.0 --reload
-
 ----------------------------------------------------------------------------------
+
 -> Virtual ENV:
 pip install virtualenv
 python -m venv myenv
@@ -10,13 +10,12 @@ myenv\Scripts\activate.bat (Windows)
 myenv\Scripts\activate.ps1 (Windows from powershell)
 
 deactivate (To exit from venv)
-
 ----------------------------------------------------------------------------------
+
 -> Place your versions in a .txt file for other devs:
 pip freeze (Show the versions of all of your packages)
 pip freeze > requirements.txt (Write those versions in a seperate .txt file)
 pip install -r requirements.txt (Install all the versions from that .txt file)
-
 ----------------------------------------------------------------------------------
 
 DEPLOY ON VERCEL:
@@ -27,7 +26,13 @@ directory... (./)  --> Press enter only for root directory
 link to .... (n)
 ... etc
 ----------------------------------------------------------------------------------
+
 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  (github token)
+
+/lib/python3.12/EXTERNALLY-MANAGED
+OR
+/usr/lib/python3.12/EXTERNALLY-MANAGED  (Remove with sudo)
+----------------------------------------------------------------------------------
 
 @app.get("/mov")
 async def show_movies():
@@ -61,8 +66,8 @@ async def update_movie(uid:str, item:Item):
     doc = conn.netflix.movies.update_one({"uid":uid}, {"$set": item.model_dump()})
     print(doc)
     return
-
 ----------------------------------------------------------------------------------
+
 MONGO-DB CHEAT SHEAT:
 
 -> Use Particular Database:

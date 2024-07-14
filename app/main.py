@@ -31,6 +31,7 @@ admin_db = client.portfolio.admin
 app.mount("/static", StaticFiles(directory="./app/static"), name="static")  #For CSS (static) file
 templates = Jinja2Templates(directory="./app/view")  #For HTML file
 
+#Root Route
 @app.get('/', response_class=HTMLResponse)
 async def home(request:Request):
     return templates.TemplateResponse('home.html', {"request": request, "show_header": True})
@@ -38,6 +39,7 @@ async def home(request:Request):
     #     return templates.TemplateResponse('home.html', {"request": request, "show_header": True})
     # return RedirectResponse(url="/login")
 
+#Auth Root
 @app.get("/login", response_class=HTMLResponse)
 def get_login(request: Request):
     if request.session.get("isLoggedin"):
@@ -59,6 +61,7 @@ async def logout(request: Request):
     request.session["isLoggedin"] = False
     return RedirectResponse(url="/login", status_code=303)
 
+#Projects Route
 @app.get("/projects")
 async def get_project(request:Request):
     return templates.TemplateResponse('projects.html', {"request": request, "show_header": True})
@@ -67,6 +70,7 @@ async def get_project(request:Request):
     #     return templates.TemplateResponse('projects.html', {"request": request, "show_header": True})
     # return RedirectResponse(url="/login")
 
+# Messages Route
 @app.get("/messages", response_class=HTMLResponse)
 def get_contacts(request: Request):
     data = db.find()
