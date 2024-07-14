@@ -1,89 +1,26 @@
+<!-- templates/base.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hamza</title>
-  <link rel="stylesheet" href="../static/style.css">
-  <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
-  <!-- Tailwind CSS scripts -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: "#e17055",
-            sec: "#f19066",
-            myWhite: "#EEEADE",
-            myBlack: "#34495e",
-            myGray: "#bdc3c7",
-            myGrayDark: "#636e72"
-          }
-        }
-      }
-    }
-  </script>
-  <!-- Tailwind CSS scripts End -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}My App{% endblock %}</title>
+    <link rel="stylesheet" href="../static/style.css">
+    <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
+    <!-- Tailwind CSS scripts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../static/reusable.js"></script>
+    <!-- Tailwind CSS scripts End -->
 </head>
 
 <body class="bg-myWhite selection:bg-myBlack selection:text-myWhite">
-  <div class="py-6 sm:py-8 lg:py-12">
-    <div class="mx-auto max-w-screen-2xl px-4 md:px-8">
-      <h2 class="mb-4 text-center text-2xl font-bold text-primary md:mb-8 lg:text-4xl">{{name}}</h2>
-
-      <form id="loginForm" class="mx-auto max-w-lg rounded-lg bg-primary shadow-lg">
-        <div class="flex flex-col gap-4 p-4 md:p-8">
-          <div>
-            <label for="email" class="mb-2 inline-block text-sm text-myWhite sm:text-base">Email or User name</label>
-            <input placeholder="Type here" type="email" id="email" name="email" required
-              class="w-full rounded border bg-myWhite px-3 py-2 text-sm text-myGrayDark outline-none transition duration-100" />
-          </div>
-
-          <div>
-            <label for="password" class="mb-2 inline-block text-sm text-myWhite sm:text-base">Password</label>
-            <input placeholder="Type here" type="password" id="password" name="password" required
-              class="w-full rounded border bg-myWhite px-3 py-2 text-sm text-myGrayDark outline-none transition duration-100" />
-          </div>
-
-          <button type="submit"
-            class="block rounded-lg bg-myWhite px-8 py-3 text-center text-sm font-semibold text-primary outline-none transition duration-200 hover:scale-105 active:bg-myWhite/80 md:text-base">Log
-            in</button>
-
-          <div class="relative flex items-center justify-center">
-            <span class="absolute inset-x-0 h-px bg-myWhite"></span>
-            <span class="relative bg-primary px-4 text-sm text-myWhite">Contact Form Panel</span>
-          </div>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <script>
-    document.getElementById('loginForm').onsubmit = async (e) => {
-      e.preventDefault();
-      const email = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      const response = await fetch('/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email, password }),
-      }
-    );
-    console.warn({ email, password })
-
-      if (response.redirected) {
-        window.location.href = response.url;
-      } else {
-        alert('Login failed');
-      }
-    }
-  </script>
-
+    {% if show_header %}
+        {% include 'header.html' %}
+    {% endif %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
 </body>
 
 </html>

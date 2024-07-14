@@ -1,33 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
+{% extends 'index.html' %}
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Contacts</title>
-    <link rel="shortcut icon" href="../static/favicon.ico" type="image/x-icon">
-    <!-- Tailwind CSS scripts -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        primary: "#e17055",
-                        sec: "#f19066",
-                        myWhite: "#EEEADE",
-                        myBlack: "#34495e",
-                        myGray: "#bdc3c7",
-                        myGrayDark: "#636e72"
-                    }
-                }
-            }
-        }
-    </script>
-    <!-- Tailwind CSS scripts End -->
-</head>
+{% block title %}Contacts - Hamza{% endblock %}
 
-<body class="bg-myWhite">
+{% block content %}
     <section class="text-gray-600 body-font overflow-hidden">
         <div class="container px-5 py-24 mx-auto">
             {% for item in form %}
@@ -48,6 +23,4 @@
             {% endfor %}
         </div>
     </section>
-</body>
-
-</html>
+{% endblock %}

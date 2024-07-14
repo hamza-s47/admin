@@ -1,0 +1,42 @@
+{% extends 'index.html' %}
+
+{% block title %}Projects - Hamza{% endblock %}
+
+{% block content %}
+<div class="py-6 sm:py-8 lg:py-12">
+    <div class="mx-auto max-w-screen-2xl px-4 md:px-8">
+      <!-- text - start -->
+      <div class="mb-10 md:mb-16">
+        <h2 class="mb-4 text-center text-2xl font-bold text-primary md:mb-6 lg:text-3xl">Frequently asked questions</h2>
+  
+        <p class="mx-auto max-w-screen-md text-center text-gray-500 md:text-lg">This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text but is random or otherwise generated.</p>
+      </div>
+      <!-- text - end -->
+  
+      <div class="grid gap-8 sm:grid-cols-2 sm:gap-y-10 xl:grid-cols-3">
+        <!-- Add Project - start -->
+        <form action="/projects" method="post" class="relative rounded-lg bg-primary/10 p-5 pt-8">
+            <button type="button" class="absolute -top-4 left-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white hover:scale-110 transition-all duration-100 ">
+              <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 448 512" fill="currentColor">
+                  <path d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z"/></svg>
+            </button>
+    
+            <input placeholder="Add title here..." class="w-full w-full bg-primary/20 px-4 py-2 rounded-lg mb-3 text-lg font-semibold focus:outline-none">
+            <textarea cols="30" rows="5" placeholder="Add description here..." class="w-full bg-primary/20 px-4 py-2 rounded-lg focus:outline-none"></textarea>
+          </form>
+          <!-- Add Project - end -->
+
+        <!-- question - start -->
+        <a class="relative rounded-lg bg-primary/10 p-5 pt-8 cursor-pointer">
+          <span class="absolute -top-4 left-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">1</span>
+  
+          <h3 class="mb-3 text-lg font-semibold text-primary md:text-xl">How does the product work?</h3>
+          <p class="text-gray-500">This is a section of some simple filler text, also known as placeholder text. It shares some characteristics of a real written text.</p>
+        </a>
+        <!-- question - end -->
+  
+        
+      </div>
+    </div>
+  </div>
+{% endblock %}
