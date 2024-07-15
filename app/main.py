@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Form
+from fastapi import FastAPI, File, UploadFile, HTTPException
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -6,17 +6,20 @@ from fastapi.requests import Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from pymongo import MongoClient
+import gridfs
+from pathlib import Path
 import secrets
 import app.models.models as schema
 
 
-
 app = FastAPI()
+
 origins = [
     "http://localhost:8000",
     "http://localhost:4200",       
     "https://hamzasiddiqui.netlify.app"
 ]
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  # Allows specific origins
@@ -25,9 +28,12 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 app.add_middleware(SessionMiddleware, secret_key=secrets.token_hex(32))
+
 client = MongoClient("mongodb+srv://hamza:1234@mycluster.438n2qs.mongodb.net/?retryWrites=true&w=majority&appName=myCluster")
 db = client.portfolio.contact
 admin_db = client.portfolio.admin
+fs = gridfs.GridFS(client.portfolio)
+
 app.mount("/static", StaticFiles(directory="./app/static"), name="static")  #For CSS (static) file
 templates = Jinja2Templates(directory="./app/view")  #For HTML file
 
@@ -38,6 +44,15 @@ async def home(request:Request):
     # if request.session.get("isLoggedin"):
     #     return templates.TemplateResponse('home.html', {"request": request, "show_header": True})
     # return RedirectResponse(url="/login")
+
+#Upload Routes
+@app.post('/resume')
+async def upload_resume(file: UploadFile = File(...)):
+    try:
+        fs.put(file.file, filename=file.filename)
+        return {"info": f"file {file.filename} saved successfully"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"File upload failed: {e}")
 
 #Auth Root
 @app.get("/login", response_class=HTMLResponse)

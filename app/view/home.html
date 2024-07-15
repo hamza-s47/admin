@@ -12,15 +12,17 @@
                 asymmetrical gentrify, subway tile poke farm-to-table.</p>
         </div>
         <div class="flex flex-wrap -m-4 text-center">
-            <label for="resume" class="cursor-pointer p-4 md:w-1/4 sm:w-1/2 w-full transition-all duration-200 hover:scale-105">
-                <input type="file" id="resume" class="hidden" accept="application/pdf">
-                <div class="border-2 border-myGray px-4 py-6 rounded-lg">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="text-primary w-12 h-12 mb-3 inline-block" height="30" width="30" fill="currentColor" viewBox="0 0 384 512">
-                        <path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM216 408c0 13.3-10.7 24-24 24s-24-10.7-24-24V305.9l-31 31c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l72-72c9.4-9.4 24.6-9.4 33.9 0l72 72c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-31-31V408z"/></svg>
-                    <h2 class="title-font font-medium text-3xl text-gray-900">1</h2>
-                    <p class="leading-relaxed">Resume</p>
-                </div>
-            </label>
+            <form id="uploadForm" enctype="multipart/form-data" class=" p-4 md:w-1/4 sm:w-1/2 w-full transition-all duration-200 hover:scale-105">
+                <label for="fileInput" class="cursor-pointer w-full h-full">
+                    <input type="file" id="fileInput" class="hidden" accept="application/pdf" onchange="uploadFile()">
+                    <div class="border-2 border-myGray px-4 py-6 rounded-lg">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="text-primary w-12 h-12 mb-3 inline-block" height="30" width="30" fill="currentColor" viewBox="0 0 384 512">
+                            <path d="M64 0C28.7 0 0 28.7 0 64V448c0 35.3 28.7 64 64 64H320c35.3 0 64-28.7 64-64V160H256c-17.7 0-32-14.3-32-32V0H64zM256 0V128H384L256 0zM216 408c0 13.3-10.7 24-24 24s-24-10.7-24-24V305.9l-31 31c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l72-72c9.4-9.4 24.6-9.4 33.9 0l72 72c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-31-31V408z"/></svg>
+                        <h2 class="title-font font-medium text-3xl text-gray-900">1</h2>
+                        <p class="leading-relaxed">Resume</p>
+                    </div>
+                </label>
+            </form>
 
             <label for="dp" class="cursor-pointer p-4 md:w-1/4 sm:w-1/2 w-full transition-all duration-200 hover:scale-105">
                 <input type="file" id="dp" class="hidden">
@@ -55,4 +57,21 @@
         </div>
     </div>
 </section>
+<script>
+    async function uploadFile() {
+        const fileInput = document.getElementById('fileInput');
+        const formData = new FormData();
+        formData.append('file', fileInput.files[0]);
+
+        try {
+            const response = await fetch('/resume', {
+                method: 'POST',
+                body: formData
+            });
+            document.getElementById('responseMessage').innerText = result.info;
+        } catch (error) {
+            document.getElementById('responseMessage').innerText = 'File upload failed';
+        }
+    }
+</script>
 {% endblock %}
