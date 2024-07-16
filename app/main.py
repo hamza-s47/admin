@@ -1,4 +1,4 @@
-from fastapi import FastAPI, File, UploadFile, HTTPException, Response
+from fastapi import FastAPI, File, UploadFile, HTTPException, Response, Form
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -80,7 +80,7 @@ async def image(file: UploadFile = File(...)):
 @app.get("/login",  response_class=HTMLResponse)
 def get_login(request: Request):
     if request.session.get("isLoggedin"):
-        RedirectResponse(url='/messages')
+        RedirectResponse(url='/')
         
     return templates.TemplateResponse("login.html", {"request": request, "show_header": False})
 
@@ -90,7 +90,7 @@ async def login(req:Request, data:schema.Admin):
     if (data.email == check['email'] or data.email == check['user_name']) and data.password == check['password']:
         req.session["isLoggedin"] = True
         print("login POST route: ", req.session.get("isLoggedin"))
-        return RedirectResponse(url= '/messages')
+        return RedirectResponse(url= '/')
     return RedirectResponse(url='/login')
 
 @app.post("/logout")
@@ -111,10 +111,13 @@ async def get_project(request:Request):
     return RedirectResponse(url='/login')
 
 @app.post('/projects')
-async def projects(data:schema.Projects):
-    data_dict = data.model_dump()
+async def projects(title: str = Form(...), description: str = Form(...), url: str = Form(...)):
+    data_dict = schema.Projects(title=title, description=description, url=url).model_dump()
     db.projects.insert_one(data_dict)
     return {"message": "Successfully added!", "status":200}
+
+# @app.put('/update-project')
+# async def update_project():
 
 # Messages Route
 @app.get("/messages", response_class=HTMLResponse)
