@@ -6,8 +6,8 @@ from fastapi.requests import Request
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from pymongo import MongoClient
-import gridfs
 import bson.binary
+from bson import ObjectId
 import secrets
 import app.models.models as schema
 
@@ -15,7 +15,7 @@ import app.models.models as schema
 app = FastAPI()
 
 origins = [
-    "http://localhost:8000",
+    # "http://localhost:8000",
     "http://localhost:4200",       
     "https://hamzasiddiqui.netlify.app"
 ]
@@ -38,10 +38,9 @@ templates = Jinja2Templates(directory="./app/view")  #For HTML file
 #Root Route
 @app.get('/', response_class=HTMLResponse)
 async def home(request:Request):
-    return templates.TemplateResponse('home.html', {"request": request, "show_header": True})
-    # if request.session.get("isLoggedin"):
-    #     return templates.TemplateResponse('home.html', {"request": request, "show_header": True})
-    # return RedirectResponse(url="/login")
+    if request.session.get("isLoggedin"):
+        return templates.TemplateResponse('home.html', {"request": request, "show_header": True})
+    return RedirectResponse(url="/login")
 
 #Image Routes
 @app.get("/image")
@@ -101,13 +100,11 @@ async def logout(request: Request):
 #Projects Route
 @app.get("/projects")
 async def get_project(request:Request):
-    # return templates.TemplateResponse('projects.html', {"request": request, "show_header": True})
-
     data = db.projects.find()
+    projects = [{**project, "_id": str(project["_id"])} for project in data]   
     if request.session.get("isLoggedin"):
-        return templates.TemplateResponse("projects.html", {"request": request, "projects": data, "show_header": True})
+        return templates.TemplateResponse("projects.html", {"request": request, "projects": projects, "show_header": True})
     
-    # print("it is comming to get root route but not redirecting: ", request.session.get("isLoggedin"))
     return RedirectResponse(url='/login')
 
 @app.post('/projects')
@@ -116,8 +113,18 @@ async def projects(title: str = Form(...), description: str = Form(...), url: st
     db.projects.insert_one(data_dict)
     return {"message": "Successfully added!", "status":200}
 
-# @app.put('/update-project')
-# async def update_project():
+@app.put("/update-project/{project_id}")
+async def update_project(project_id: str, title: str = Form(...), description: str = Form(...), url: str = Form(...)):
+    project = {
+        "title": title,
+        "description": description,
+        "url": url
+    }
+    result = db.projects.update_one({"_id": ObjectId(project_id)}, {"$set": project})
+    if result.modified_count == 1:
+        return {"message": "Project updated successfully", "status": 200}
+    
+    return {"message": "Project not found or not updated", "status": 404}
 
 # Messages Route
 @app.get("/messages", response_class=HTMLResponse)

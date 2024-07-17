@@ -18,7 +18,7 @@
     <div class="grid gap-8 sm:grid-cols-2 sm:gap-y-10 xl:grid-cols-3">
       <!-- Add Project - start -->
       <form id="projectForm" class="relative rounded-lg bg-primary/10 p-5 pt-8">
-        <button onclick="reload()" type="submit"
+        <button type="submit"
           class="absolute -top-4 left-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white hover:scale-110 transition-all duration-100 ">
           <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 448 512" fill="currentColor">
             <path
@@ -35,46 +35,109 @@
       </form>
       <!-- Add Project - end -->
 
-      <!-- question - start -->
-      <a class="relative rounded-lg bg-primary/10 p-5 pt-8 cursor-pointer">
-        <span
-          class="absolute -top-4 left-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">1</span>
-
-        <h3 class="mb-3 text-lg font-semibold text-primary md:text-xl">How does the product work?</h3>
-        <p class="text-gray-500">This is a section of some simple filler text, also known as placeholder text. It shares
-          some characteristics of a real written text.</p>
+      <!-- Edit - start -->
+      {% for item in projects %}
+      <a id="PrVal" class="relative rounded-lg bg-primary/10 p-5 pt-8 cursor-pointer hover:scale-110"
+        data-item='{"_id":"{{item._id}}", "title":"{{item.title}}", "description":"{{item.description}}", "url":"{{item.url}}"}'
+        onclick='modalData()'>
+        <span class="absolute -top-4 left-4 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white">{{
+          loop.index }}</span>
+        <h3 class="mb-3 text-lg font-semibold text-primary md:text-xl">{{item.title}}</h3>
+        <p class="text-gray-500">{{item.description}}</p>
       </a>
-      <!-- question - end -->
+      {% endfor %}
+      <!-- Edit - end -->
 
 
     </div>
   </div>
 </div>
+<!-- Modal -->
+<main class="w-screen h-full fixed inset-0 bg-black/50 flex justify-center items-center" id="modal">
+  <form id="modalForm" class="relative rounded-lg bg-myWhite p-5 pt-8">
+    <button onclick="closeModal()"
+      class="absolute -top-4 right-4 rotate-45 inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white hover:scale-110 transition-all duration-100 ">
+      <svg xmlns="http://www.w3.org/2000/svg" height="15" width="15" viewBox="0 0 448 512" fill="currentColor">
+        <path
+          d="M256 80c0-17.7-14.3-32-32-32s-32 14.3-32 32V224H48c-17.7 0-32 14.3-32 32s14.3 32 32 32H192V432c0 17.7 14.3 32 32 32s32-14.3 32-32V288H400c17.7 0 32-14.3 32-32s-14.3-32-32-32H256V80z" />
+      </svg>
+    </button>
+    <input name="title" placeholder="Add title here..."
+      class="w-full w-full bg-primary/20 px-4 py-2 rounded-lg mb-3 text-lg font-semibold focus:outline-none">
+    <textarea name="description" cols="30" rows="5" placeholder="Add description here..."
+      class="w-full bg-primary/20 px-4 py-2 rounded-lg focus:outline-none"></textarea>
+    <input name="url" placeholder="Add url here..."
+      class="w-full w-full bg-primary/20 px-4 py-2 rounded-lg mb-3 text-sm font-light focus:outline-none">
+    <button type="submit"
+      class="inline-flex h-8 w-8 items-center justify-center rounded-full bg-primary text-white hover:scale-110 transition-all duration-100 ">
+      <svg xmlns="http://www.w3.org/2000/svg" height="12" width="12" fill="currentColor" viewBox="0 0 512 512">
+        <path
+          d="M498.1 5.6c10.1 7 15.4 19.1 13.5 31.2l-64 416c-1.5 9.7-7.4 18.2-16 23s-18.9 5.4-28 1.6L284 427.7l-68.5 74.1c-8.9 9.7-22.9 12.9-35.2 8.1S160 493.2 160 480V396.4c0-4 1.5-7.8 4.2-10.7L331.8 202.8c5.8-6.3 5.6-16-.4-22s-15.7-6.4-22-.7L106 360.8 17.7 316.6C7.1 311.3 .3 300.7 0 288.9s5.9-22.8 16.1-28.7l448-256c10.7-6.1 23.9-5.5 34 1.4z" />
+      </svg>
+    </button>
+  </form>
+</main>
 <script>
-  document.getElementById('projectForm').addEventListener('submit', async function(event) {
-      event.preventDefault(); // Prevent the form from submitting the traditional way
+  document.querySelector("#modal").style.display = "none";
+  const modalForm = document.querySelector("#modalForm");
 
-      const form = event.target;
-      const formData = new FormData(form);
+  function modalData() {
 
-      try {
-          const response = await fetch('/projects', {
-              method: 'POST',
-              body: formData
-          });
+    prVal = JSON.parse(document.querySelector("#PrVal").getAttribute("data-item"));
+    alert(prVal.title)
+    modalForm.title.value = prVal.title;
+    modalForm.description.value = prVal.description;
+    modalForm.url.value = prVal.url;
+    document.querySelector("#modal").style.display = "flex";
+  }
 
-          const result = await response.json();
-          if (response.ok) {
-              document.getElementById('responseMessage').innerText = result.message;
-              setTimeout(()=>{
-                window.location.reload();
-              }, 1500)
-          } else {
-              document.getElementById('responseMessage').innerText = 'Failed to add project';
-          }
-      } catch (error) {
-          document.getElementById('responseMessage').innerText = 'An error occurred while adding the project';
+  function closeModal() {
+    document.querySelector("#modal").style.display = "none";
+  }
+
+  // API calling for PUT projects
+  modalForm.addEventListener('submit', async function (event) {
+    // event.preventDefault();
+    
+    const form = event.target;
+    const formData = new FormData(form);
+    const formParams = new URLSearchParams(formData);
+
+    const response = await fetch(`/update-project/${prVal._id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      body: formParams
+    });
+    if (response.ok){
+      document.querySelector("#modal").style.display = "none";
+    }
+  });
+
+  // API calling for POST projects
+  document.getElementById('projectForm').addEventListener('submit', async function (event) {
+    event.preventDefault(); // Prevent the form from submitting the traditional way
+
+    const form = event.target;
+    const formData = new FormData(form);
+
+    try {
+      const response = await fetch('/projects', {
+        method: 'POST',
+        body: formData
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        document.getElementById('responseMessage').innerText = result.message;
+        form.reset();
+      } else {
+        document.getElementById('responseMessage').innerText = 'Failed to add project';
       }
+    } catch (error) {
+      document.getElementById('responseMessage').innerText = 'An error occurred while adding the project';
+    }
   });
 </script>
 {% endblock %}
