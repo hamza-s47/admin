@@ -29,6 +29,8 @@ link to .... (n)
 
 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  (github token)
 
+E1L9Y4CZs3fHZG0v (db pass)
+
 /lib/python3.12/EXTERNALLY-MANAGED
 OR
 /usr/lib/python3.12/EXTERNALLY-MANAGED  (Remove with sudo)

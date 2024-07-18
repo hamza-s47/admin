@@ -84,15 +84,15 @@ def get_login(request: Request):
     return templates.TemplateResponse("login.html", {"request": request, "show_header": False})
 
 @app.post("/login")
-async def login(req:Request, data:schema.Admin):
+async def login(request:Request, data:schema.Admin):
     check = db.admin.find_one()
     if (data.email == check['email'] or data.email == check['user_name']) and data.password == check['password']:
-        req.session["isLoggedin"] = True
-        print("login POST route: ", req.session.get("isLoggedin"))
+        request.session["isLoggedin"] = True
+        print("login POST route: ", request.session.get("isLoggedin"))
         return RedirectResponse(url= '/')
     return RedirectResponse(url='/login')
 
-@app.post("/logout")
+@app.get("/logout")
 async def logout(request: Request):
     request.session["isLoggedin"] = False
     return RedirectResponse(url="/login", status_code=303)

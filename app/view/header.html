@@ -2,7 +2,7 @@
     <div class="container mx-auto flex flex-wrap p-5 flex-col md:flex-row items-center">
         <a href="/" class="flex title-font font-medium items-center text-gray-900 mb-4 md:mb-0">
             <div class="w-10  h-10 rounded-full bg-primary">
-                <img src="/image" alt="DP" class="w-full h-full rounded-full">
+                <img src="/image" alt="DP" class="w-full h-full rounded-full object-cover">
             </div>
             <span class="ml-3 text-xl uppercase">Portfolio</span>
         </a>
@@ -12,14 +12,15 @@
             <a href="/messages" class="mr-5 hover:text-gray-900">Messages</a>
             <!-- <a class="mr-5 hover:text-gray-900">Fourth Link</a> -->
         </nav>
-        <form action="/logout" method="post "></form>
-        <a href="/login" class="inline-flex items-center bg-primary border-0 py-1 px-3 focus:outline-none hover:scale-105 rounded text-base text-myWhite mt-4 md:mt-0">Log
-            out
-            <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                class="w-4 h-4 ml-1" viewBox="0 0 24 24">
-                <path d="M5 12h14M12 5l7 7-7 7"></path>
-            </svg>
-        </a>
+        <form action="/logout" method="get ">
+            <button type="submit"
+                class="inline-flex items-center bg-primary border-0 py-1 px-3 focus:outline-none hover:scale-105 rounded text-base text-myWhite mt-4 md:mt-0">Log
+                out
+                <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                    class="w-4 h-4 ml-1" viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5l7 7-7 7"></path>
+                </svg>
+            </button>
         </form>
     </div>
 </header>
