@@ -7,6 +7,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from starlette.middleware.sessions import SessionMiddleware
 from pymongo import MongoClient
 import bson.binary
+import logging  
 from bson import ObjectId
 import secrets
 import app.models.models as schema
@@ -15,7 +16,6 @@ import app.models.models as schema
 app = FastAPI()
 
 origins = [
-    # "http://localhost:8000",
     "http://localhost:4200",       
     "https://hamzasiddiqui.netlify.app"
 ]
@@ -23,7 +23,7 @@ origins = [
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,  # Allows specific origins
-    allow_credentials=True,
+    # allow_credentials=True,
     allow_methods=["*"],  # Allows methods like (GET, POST, PUT, DELETE, etc.)
     allow_headers=["*"],  # Allows all headers
 )
@@ -50,11 +50,14 @@ async def show_image():
         if not file_document:
             raise HTTPException(status_code=404, detail="File not found")
         
-        # Return the file as a response with content type image/jpeg
+        # Log the document to inspect its contents
+        logging.info(f"File document: {file_document}")
+
+        # Return the file as a response with the appropriate content type
         return Response(content=file_document["data"], media_type=file_document["content_type"])
         
     except Exception as e:
-        # return {"message": "Internal Server   Error", "status":500}
+        logging.error(f"Failed to retrieve file: {e}")
         raise HTTPException(status_code=500, detail=f"Failed to retrieve file: {e}")
 
 @app.put('/image')
